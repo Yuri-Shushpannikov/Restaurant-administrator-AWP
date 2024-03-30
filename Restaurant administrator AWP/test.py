@@ -25,23 +25,24 @@ reservationbutton_label = Label(image = reservationbutton_img)
 class AddReservationDialog(tk.Toplevel):
     def __init__(self, parent, table):
         super().__init__(parent)
-        self.title("Добавить бронирование")
+        self.title("Добавить бронирование")       
+        self.geometry("400x300") 
 
         self.name_label = tk.Label(self, text="Имя гостя:")
         self.name_label.grid(row=0, column=0, sticky="w")
-        self.name_entry = tk.Entry(self)
+        self.name_entry = tk.Entry(self, width = 35)
         self.name_entry.grid(row=0, column=1)
 
         self.time_label = tk.Label(self, text="Время бронирования:")
         self.time_label.grid(row=1, column=0, sticky="w")
-        self.time_entry = tk.Entry(self)
+        self.time_entry = tk.Entry(self, width = 35)
         self.time_entry.grid(row=1, column=1)
 
         self.add_button = tk.Button(self, text="Добавить бронирование", command=self.add_reservation)
-        self.add_button.grid(row=2, columnspan=2)
+        self.add_button.grid(row=2, column=0, padx=10)
 
         self.cancel_button = tk.Button(self, text="Отмена", command=self.destroy)
-        self.cancel_button.grid(row=2, column=1, padx=5, pady=5)
+        self.cancel_button.grid(row=2, column=1)
 
         self.table = table
 
@@ -451,19 +452,25 @@ class DinerApp:
         self.clear_widgets()
 
         back_button = tk.Button(self.root, text="Назад", command=self.show_tables)
-        back_button.pack(anchor="nw")
+        back_button.pack(anchor="nw", padx=10, pady=10)
+
+        reservation_label = tk.Label(self.root, text="Бронирование:")
+        reservation_label.pack()
 
         # Display selected table's reservations
-        reservations_listbox = tk.Listbox(self.root, selectmode="single")
+        reservations_listbox = tk.Listbox(self.root, selectmode="single", width=20, height=10, font=(50))
         for reservation in self.selected_table.reservations:
             reservations_listbox.insert(tk.END, reservation.name + " - " + reservation.time)
         reservations_listbox.pack()
 
-        add_reservation_button = tk.Button(self.root, text="Добавить бронирование", command=lambda: self.add_reservation())
-        add_reservation_button.pack()
+        top_button_frame_reserve = tk.Frame(root)
+        top_button_frame_reserve.pack(side="top", fill="x",padx=330)
 
-        delete_reservation_button = tk.Button(self.root, text="Удалить бронирование", command=lambda: self.delete_reservation(reservations_listbox))
-        delete_reservation_button.pack()
+        add_reservation_button = tk.Button(top_button_frame_reserve, text="Добавить бронирование", command=lambda: self.add_reservation(), width=20, height=3)
+        add_reservation_button.grid(row=0, column=0, padx=10, pady=10)
+
+        delete_reservation_button = tk.Button(top_button_frame_reserve, text="Удалить бронирование", command=lambda: self.delete_reservation(reservations_listbox), width=20, height=3)
+        delete_reservation_button.grid(row=0, column=1, padx=10, pady=10)
 
     def add_reservation(self):
         dialog = AddReservationDialog(self.root, self.selected_table)
